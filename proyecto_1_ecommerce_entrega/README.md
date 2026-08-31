@@ -25,7 +25,7 @@ Para ejecutar este proyecto en tu propia computadora, sigue estos pasos:
    ```
    pip install pandas matplotlib seaborn
    ```
-2. Abre la carpeta completa `proyecto_1_ecommerce_entrega/` en tu editor (VS Code, Jupyter, etc.) — 
+2. Abre la carpeta completa `proyecto_1_ecommerce_entrega/` en tu editor (VS Code, Jupyter, etc.) 
 3. Abre el archivo `notebook_analisis.ipynb`.
 4. Ejecuta todas las celdas en orden, de arriba hacia abajo 
 5. Revisa cada gráfico generado junto con sus notas explicativas, ya que cada uno responde a una pregunta clave de negocio distinta.
