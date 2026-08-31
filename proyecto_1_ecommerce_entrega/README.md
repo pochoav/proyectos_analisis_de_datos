@@ -25,9 +25,9 @@ Para ejecutar este proyecto en tu propia computadora, sigue estos pasos:
    ```
    pip install pandas matplotlib seaborn
    ```
-2. Abre la carpeta completa `proyecto_1_ecommerce_entrega/` en tu editor (VS Code, Jupyter, etc.) — es importante abrir la carpeta raíz, no solo el archivo del notebook, para que las rutas relativas a los datos funcionen correctamente.
+2. Abre la carpeta completa `proyecto_1_ecommerce_entrega/` en tu editor (VS Code, Jupyter, etc.) — 
 3. Abre el archivo `notebook_analisis.ipynb`.
-4. Ejecuta todas las celdas en orden, de arriba hacia abajo (Kernel > Reiniciar y ejecutar todo, o celda por celda con `Shift + Enter`).
+4. Ejecuta todas las celdas en orden, de arriba hacia abajo 
 5. Revisa cada gráfico generado junto con sus notas explicativas, ya que cada uno responde a una pregunta clave de negocio distinta.
 
 El notebook lee el archivo `data/dataset_original.csv`, realiza la limpieza correspondiente, y genera automáticamente `data/dataset_limpio.csv` como parte del proceso.
