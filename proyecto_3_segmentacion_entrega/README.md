@@ -27,7 +27,7 @@ pip install pandas numpy scikit-learn plotly matplotlib
 
 | Cluster | Perfil | Recencia (días) | Frecuencia (pedidos) | Monetario promedio | N° clientes |
 |---|---|---|---|---|---|
-| 3 | VIP / Champions* | 3.5 | 212.75 | $436,835.79 | 4 |
+| 3 | VIP | 3.5 | 212.75 | $436,835.79 | 4 |
 | 2 | Leales | 25.9 | 103.7 | $83,086.08 | 35 |
 | 0 | En Riesgo | 67.0 | 7.3 | $3,008.62 | 3,842 |
 | 1 | Perdidos | 463.2 | 2.2 | $764.48 | 2,000 |
