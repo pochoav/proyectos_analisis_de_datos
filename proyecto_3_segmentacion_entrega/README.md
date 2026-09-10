@@ -32,6 +32,8 @@ pip install pandas numpy scikit-learn plotly matplotlib
 | 0 | En Riesgo | 67.0 | 7.3 | $3,008.62 | 3,842 |
 | 1 | Perdidos | 463.2 | 2.2 | $764.48 | 2,000 |
 
+Se encontró una tendencia del Cluster 3 que presume compras recurrentes (cada 2-5 días). Esto sugiere que la naturaleza de estas 4 cuentas es de tipo empresarial, abriendo posibilidades por programas de retención B2B.
+
 ## Ejecución
 
 1. Clonar este repositorio y ubicarse en `proyecto_3_segmentacion_entrega/`.
