@@ -12,7 +12,7 @@ Este proyecto construye un modelo de segmentación RFM (Recencia, Frecuencia, Mo
 - ¿Qué acciones de marjeting se recomiendad para cada segmento?
 
 ## Metodología
-1. **Cálculo de RFM (Pandas):** por cada cliente se calculó Recencia (días desde su última compra), Frecuencia (número de pedidos —`Invoice`— distintos) y Monetario (suma total gastada).
+1. **Cálculo de RFM (Pandas):** por cada cliente se calculó Recencia (días desde su última compra), Frecuencia (número de pedidos (`Invoice`) distintos) y Monetario (suma total gastada).
 2. **Escalamiento (Scikit-Learn `StandardScaler`):** las tres métricas viven en escalas muy distintas entre sí, por lo que se estandarizaron antes de aplicar clustering.
 3. **Clustering (`KMeans`):** el número óptimo de clusters se determinó con el método del codo (curvatura máxima en k=4)
 4. **Visualización (Plotly):** un scatter 3D interactivo (Recencia × Frecuencia × Monetario) y gráficos de barras comparando el gasto promedio y la frecuencia promedio de cada grupo.
