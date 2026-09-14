@@ -9,7 +9,7 @@ Este proyecto construye un modelo de segmentación RFM (Recencia, Frecuencia, Mo
 - ¿Cómo se distribuyen los clientes según los criterios RFM?
 - ¿Cuántos segmentos de clientes existen según el modelo K-Means?
 - ¿Cuáles son las características principales de cada grupo?
-- ¿Qué acciones de marjeting se recomiendad para cada segmento?
+- ¿Qué acciones de marketing se recomiendad para cada segmento?
 
 ## Metodología
 1. **Cálculo de RFM (Pandas):** por cada cliente se calculó Recencia (días desde su última compra), Frecuencia (número de pedidos (`Invoice`) distintos) y Monetario (suma total gastada).
