@@ -1,0 +1,85 @@
+======================================================================
+PROYECTO 4: Pipeline de Datos en Vivo, NLP y Dashboard Interactivo
+            (Financial Market & Sentiment Tracker)
+======================================================================
+
+CONTEXTO:
+Un fondo de inversión privado necesita monitorear la relación entre las 
+noticias del mercado financiero y la volatilidad real del precio de las acciones.
+
+Construirás una solución de datos end-to-end: un script que ingiere datos 
+en tiempo real desde APIs externas, procesa el texto con procesamiento de 
+lenguaje natural (NLP), almacena los datos en una base de datos local (SQLite)
+y despliega una aplicación web en la nube con Streamlit.
+
+----------------------------------------------------------------------
+OBJETIVOS / PREGUNTAS CLAVE DE NEGOCIO
+----------------------------------------------------------------------
+Tu aplicación y pipeline deben responder a lo siguiente:
+• ¿Existe una correlación directa entre el tono (positivo/negativo) de las 
+  noticias del día y el volumen/precio de cierre de una acción?
+• ¿Cuáles son las palabras clave más frecuentes en noticias con impacto negativo?
+• ¿Cómo varía el indicador de sentimiento promedio semana a semana para un activo?
+
+----------------------------------------------------------------------
+ENTREGABLES REQUERIDOS
+----------------------------------------------------------------------
+Crea una carpeta para el proyecto con esta estructura exacta:
+
+proyecto_4_pipeline_entrega/
+├── data/
+│   └── market_data.db            <-- Base de datos SQLite generada por el script
+├── src/
+│   ├── fetch_data.py             <-- Script de ingesta desde APIs hacia SQLite
+│   └── nlp_analysis.py           <-- Módulo de análisis de sentimiento
+├── app.py                        <-- Aplicación principal interactiva de Streamlit
+├── requirements.txt              <-- Lista de dependencias (pip install)
+├── .gitignore                    <-- Ocultar claves de API y base de datos
+├── reporte_tecnico.pdf           <-- Informe de arquitectura y hallazgos
+└── README.md                     <-- Documentación completa e instrucciones de despliegue
+
+----------------------------------------------------------------------
+CHECKLIST DE TRABAJO (PASO A PASO)
+----------------------------------------------------------------------
+
+[ ] PASO 1: Ingesta de Datos y Base de Datos (Python + APIs + SQLite)
+    - Crear `src/fetch_data.py` usando `yfinance` para descargar precios históricos 
+      y de volumen de mínimo 5 activos (ej. AAPL, TSLA, NVDA, AMZN, MSFT).
+    - Conectarse a la API de Noticias `NewsAPI` para obtener los titulares 
+      financieros más recientes asociados a cada empresa.
+    - Diseñar la base de datos `market_data.db` usando `sqlite3` en Python con al 
+      menos dos tablas relacionadas: `precios` y `noticias`.
+    - Guardar automáticamente la información limpia dentro de la base de datos.
+
+[ ] PASO 2: Procesamiento de Lenguaje Natural (NLTK / TextBlob / VADER)
+    - Crear `src/nlp_analysis.py` para procesar el texto de los titulares.
+    - Aplicar limpieza de texto: eliminación de stopwords, puntuación y tokenización.
+    - Calcular el puntaje de sentimiento (*Polarity Score*) de cada titular.
+    - Categorizar las noticias en: "Positiva", "Neutral" o "Negativa".
+
+[ ] PASO 3: Desarrollo de Aplicación Web (Streamlit + Plotly)
+    - Crear la aplicación interactiva `app.py` que lea los datos desde SQLite.
+    - Permitir que el usuario seleccione el ticker de la empresa y un rango de fechas.
+    - Mostrar indicadores clave (KPIs): Precio actual, Variación %, Sentimiento Promedio.
+    - Generar gráficos interactivos con Plotly:
+      * Gráfico de velas (Candlestick) o líneas del precio con volumen.
+      * Gráfico de barras de distribución de sentimiento de noticias.
+      * Gráfico de dispersión/líneas comparando el precio vs. el índice de sentimiento.
+
+[ ] PASO 4: Despliegue en la Nube y Documentación
+    - Generar el archivo `requirements.txt` con las versiones de las librerías.
+    - Desplegar la aplicación en la nube usando **Streamlit Community Cloud** 
+      (debe generarse una URL pública funcional para consultar la app).
+    - Crear el archivo `README.md` incluyendo la arquitectura del sistema, 
+      capturas de pantalla, el link a la app en vivo e instrucciones de uso.
+    - Entregar el informe en PDF explicando los hallazgos y las limitaciones del modelo.
+
+======================================================================
+RECURSOS Y LIBRERÍAS OBLIGATORIAS:
+- yfinance: https://pypi.org/project/yfinance/
+- News API: https://newsapi.org
+- Ingesta y Datos: `requests`, `sqlite3`, `pandas`.
+- NLP: `nltk` o `textblob` / `vaderSentiment`.
+- Interfaz y Gráficos: `streamlit`, `plotly`.
+- Despliegue: GitHub + Streamlit Community Cloud.
+======================================================================
