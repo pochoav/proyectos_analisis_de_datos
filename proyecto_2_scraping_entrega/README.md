@@ -1,7 +1,7 @@
 # Proyecto 2: Análisis del Mercado de Libros con Scraping
 
 En este proyecto se creó un pipeline de datos que extrae información de una página web (Scraping), limpia la información y genera gráficas útiles conforme a los objetivos de negocio. Esto se hizo con el principal objetivo de evaluar el mercado de libros y dar *insights* acerca de la situación actual.
-
+aa
 ## Preguntas clave
 
 - ¿Cuántos libros hay en total en el catálogo y cuál es el precio promedio?
