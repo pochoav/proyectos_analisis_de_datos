@@ -21,8 +21,17 @@ def _asegurar_recursos_nltk():
         except LookupError:
             nltk.download(nombre)
 
+def _asegurar_recursos_textblob():
+    #Descarga corpus textBlob si es necesario
+    recursos = ["brown", "punkt", "wordnet", "averaged_perceptron_tagger", "conll2000", "movie_reviews"]
+    for recurso in recursos:
+        try:
+            nltk.data.find(f"corpora/{recurso}")
+        except LookupError:
+            nltk.download(recurso)
 
 _asegurar_recursos_nltk()
+_asegurar_recursos_textblob()
 STOPWORDS_EN = set(stopwords.words("english"))
 
 def limpiar_texto(texto):
