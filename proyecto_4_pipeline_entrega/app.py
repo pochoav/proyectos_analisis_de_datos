@@ -19,7 +19,7 @@ st.set_page_config(
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "data", "market_data.db")
 
-# Reutilizamos limpiar_texto() de nlp_analysis.py en vez de duplicar la lógica de NLTK aquí
+#Reutilizar función desde nlp_analysis.py para no repetir análisis con NLTK
 sys.path.append(os.path.join(BASE_DIR, "src"))
 from nlp_analysis import limpiar_texto
 
@@ -87,7 +87,7 @@ if not tickers_disponibles:
     st.error("❌ La base de datos no tiene precios registrados todavía.")
     st.stop()
 
-# --- Sidebar ---
+# --- Barra lateral ---
 st.sidebar.title("⚙️ Filtros de análisis")
 ticker_seleccionado = st.sidebar.selectbox("Activo financiero:", tickers_disponibles)
 
@@ -131,7 +131,7 @@ nlp_completado = not df_noticias.empty and col_score in df_noticias.columns
 if not df_noticias.empty and not nlp_completado:
     st.warning("⚠️ Aún no se ha calculado el sentimiento. Ejecuta 'python src/nlp_analysis.py'.")
 
-# --- Encabezado y KPIs (los 3 que pide el proyecto) ---
+# --- Encabezado y KPIs ---
 st.title(f"📈 Tracker financiero y de sentimiento: {ticker_seleccionado}")
 st.write(f"Modelo **{modelo_nlp}** · del **{fecha_inicio}** al **{fecha_fin}**")
 
@@ -154,7 +154,7 @@ else:
 
 st.markdown("---")
 
-# --- 1. Velas + volumen ---
+# --- Velas + volumen ---
 if not df_precios.empty:
     fig_velas = make_subplots(
         rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05, row_heights=[0.8, 0.2]
@@ -176,7 +176,7 @@ else:
 
 col_g1, col_g2 = st.columns(2)
 
-# --- 2. Distribución de sentimiento ---
+# --- Distribución de sentimiento ---
 with col_g1:
     if nlp_completado:
         conteo = df_noticias[col_cat].value_counts().reset_index()
@@ -191,7 +191,7 @@ with col_g1:
     else:
         st.info("Ejecuta nlp_analysis.py para ver las categorías de sentimiento.")
 
-# --- 3. Precio vs. sentimiento diario ---
+# --- Precio vs. sentimiento diario ---
 with col_g2:
     if not df_precios.empty and nlp_completado:
         df_sent_diario = (
@@ -215,7 +215,7 @@ with col_g2:
 
 st.markdown("---")
 
-# --- 4. Tendencia semanal de sentimiento (pregunta de negocio dedicada) ---
+# --- Tendencia semanal de sentimiento ---
 if nlp_completado:
     df_semanal = (
         df_noticias.sort_values("fecha").set_index("fecha")
@@ -228,7 +228,7 @@ if nlp_completado:
     fig_semanal.update_layout(template="plotly_white", yaxis_title="Sentimiento promedio")
     st.plotly_chart(fig_semanal, width="stretch")
 
-# --- 5. Palabras clave más frecuentes en noticias negativas ---
+# --- Palabras clave más frecuentes en noticias negativas ---
 if nlp_completado:
     titulares_negativos = df_noticias.loc[df_noticias[col_cat] == "Negativa", "titular"]
     if not titulares_negativos.empty:
@@ -246,6 +246,7 @@ if nlp_completado:
     else:
         st.info("No hay noticias negativas en el rango seleccionado.")
 
+# --- Despliegue de tabla noticias ---
 st.markdown("---")
 st.subheader("📰 Titulares de noticias")
 if not df_noticias.empty:

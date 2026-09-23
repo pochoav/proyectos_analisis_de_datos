@@ -3,6 +3,8 @@ import requests
 from datetime import datetime, timedelta
 import sqlite3
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # Claves para empresas
@@ -28,8 +30,9 @@ precios_totales = yf.download(
 )
 
 #Titulares financieros (NewsAPI)
-api_key = "ba3db5bac13a49b8a3efc0471131bd30"
+api_key = os.environ["NEWS_API_KEY"]
 noticias_totales = []
+
 
 for ticker, nombre_empresa in empresas.items():
     url = "https://newsapi.org/v2/everything"

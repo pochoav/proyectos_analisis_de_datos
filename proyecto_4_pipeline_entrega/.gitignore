@@ -1,0 +1,19 @@
+# Cache generado
+__pycache__/
+*.pyc
+
+# Variables de entorno (API Key
+.env
+
+#Entornos virtuales
+venv/
+env/
+.venv/
+
+#Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# NOTA: data/market_data.db NO se ignora a propósito.
+# Streamlit Community Cloud nunca ejecuta fetch_data.py ni nlp_analysis.py
+# por su cuenta, así que sin este archivo la app desplegada se quedaría sin datos.
