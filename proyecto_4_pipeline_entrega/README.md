@@ -48,7 +48,7 @@ proyecto_4_pipeline_entrega/
 ```
 ## Instalación local
 ```bash
-git clone https://github.com/pochoav/proyectos_analisis_de_dattos.git
+git clone https://github.com/pochoav/proyectos_analisis_de_datos.git
 cd proyecto_4_pipeline_entrega
 pip install -r requirements.txt
 ```
