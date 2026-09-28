@@ -17,3 +17,5 @@ Thumbs.db
 # NOTA: data/market_data.db NO se ignora a propósito.
 # Streamlit Community Cloud nunca ejecuta fetch_data.py ni nlp_analysis.py
 # por su cuenta, así que sin este archivo la app desplegada se quedaría sin datos.
+
+data/*_respaldo.db

@@ -84,17 +84,56 @@ def correlacion_sentimiento_mercado():  #Compara días donde hay por lo menos pr
 
     return pd.DataFrame(resultados)
 
+def contruir_panel_diario():
+    #Calendario de días hábiles para el análisis de correlación entre sentimiento y precio CON REZAGO TEMPORAL
+    precios = cargar_precios_diarios()
+    precios = precios.drop_duplicates(subset=["ticker", "fecha"]) #Protección de filas repetidas
+    precios = precios.sort_values(["ticker", "fecha"])
+    precios["variacion_pct"] = precios.groupby("ticker")["cierre"].pct_change() * 100
+
+    sentimiento = cargar_sentimiento_diario()
+    return pd.merge(precios, sentimiento, on=["ticker", "fecha"], how="left")
+
+def correlacion_con_rezago(rezagos=(0, 1, 2)):
+    #Correlación entre el precio del día y el sentimiento promedio anterior
+    panel = contruir_panel_diario()
+
+    for k in rezagos:
+        panel[f"vader_{k}"] = panel.groupby("ticker")["sentimiento_vader"].shift(k)
+        panel[f"textblob_{k}"] = panel.groupby("ticker")["sentimiento_textblob"].shift(k)
+
+    grupos = list(panel.groupby("ticker")) + [("TODOS (agrupado)", panel)]
+
+    resultados = []
+    for nombre, grupo in grupos:
+        for k in rezagos:
+            pares = grupo[f"vader_{k}"].notna() & grupo["variacion_pct"].notna()
+            resultados.append({
+                "ticker": nombre,
+                "rezago": k,
+                "pares": int(pares.sum()),
+                "corr_vader": grupo["variacion_pct"].corr(grupo[f"vader_{k}"]),
+                "corr_textblob": grupo["variacion_pct"].corr(grupo[f"textblob_{k}"]),
+            })
+    return pd.DataFrame(resultados)
+
+
+
 
 
 if __name__ == "__main__":
-    df = cargar_noticias_analizadas()
-    print("\nCorrelación entre sentimiento diario y precio/volumen:")
-    print(correlacion_sentimiento_mercado().to_string(index=False))
+   df = cargar_noticias_analizadas()
+   print(f"\nNoticias comparadas : {len(df)}")
+   print(f"% de coincidencia de categoría (VADER vs. TextBlob): {porcentaje_coincidencia(df):.1f}%")
 
-print(f"\nNoticias comparadas: {len(df)}")
-print(f"% de coincidencia de categoría (VADER vs. TextBlob): {porcentaje_coincidencia(df):.1f}%")
+   print("\nMatriz de confusión (filas = VADER, columnas = TextBlob):")
+   print(matriz_confusion(df))
+                                         #Correlación entre entre 'positividad' o 'negatividad'
+   print(f"Correlación de Pearson entre compound(VADER) y polarity (TextBlob): {correlacion_pearson(df):.3f}")
 
-print("\nMatriz de confusión (filas = VADER, columnas = TextBlob):")
-print(matriz_confusion(df))
+   print(f"Correlación entre sentimiento diario y precio/volumen:")
+   print(correlacion_sentimiento_mercado().to_string(index=False))
 
-print(f"\nCorrelación de Pearson entre compound (VADER) y polarity (TextBlob): {correlacion_pearson(df):.3f}")
+   print("\nCorrelación sentimiento (día t-k) vs. variación de precio (día t):")
+   print(correlacion_con_rezago().round(3).to_string(index=False))
+

@@ -95,7 +95,7 @@ for ticker in empresas.keys():
     df_ticker = precios_totales[ticker].reset_index()    
     for _, fila in df_ticker.iterrows():                 
         cursor.execute(
-            "INSERT INTO precios (ticker, fecha, apertura, maximo, minimo, cierre, volumen) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO precios (ticker, fecha, apertura, maximo, minimo, cierre, volumen) VALUES (?, ?, ?, ?, ?, ?, ?)",
             (
                 ticker,
                 fila["Date"].strftime("%Y-%m-%d"),
@@ -106,7 +106,7 @@ for ticker in empresas.keys():
 # --- Insertar noticias ---
 for noticia in noticias_totales:
     cursor.execute(
-        "INSERT INTO noticias (ticker, fecha, titular) VALUES (?, ?, ?)",
+        "INSERT OR IGNORE INTO noticias (ticker, fecha, titular) VALUES (?, ?, ?)",
         (noticia["ticker"], noticia["fecha"], noticia["titular"])
     )                                                    
 
