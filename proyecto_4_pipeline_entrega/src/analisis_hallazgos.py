@@ -4,6 +4,7 @@
 import os
 import sqlite3
 import pandas as pd
+from textblob import TextBlob
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH=os.path.join(BASE_DIR, "data", "market_data.db")
@@ -117,8 +118,54 @@ def correlacion_con_rezago(rezagos=(0, 1, 2)):
             })
     return pd.DataFrame(resultados)
 
+def cargar_noticias_con_titular():
+    #Conservar el titular para obtener subjectivity
+    conexion = sqlite3.connect(DB_PATH)
+    df=pd.read_sql_query(
+        """
+        SELECT ticker, titular, categoria_vader, categoria_textblob,
+               sentimiento_vader, sentimiento_textblob
+        FROM noticias
+        WHERE categoria_vader IS NOT NULL AND categoria_textblob IS NOT NULL
+        """,
+        conexion
+    )
+    conexion.close()
+    return df
 
+def calcular_subjectivity(df):
+    #Usar TextBlob para calcular subjectivity y agrega la columna extra
+    df=df.copy()
+    df["subjectivity"]=df["titular"].apply(lambda t: TextBlob(t).sentiment.subjectivity)
+    return df
 
+def resumen_subjectivity(df):
+    #Promedio, mediana y % de titulares sin léxico en TextBlob
+    return {
+        "promedio": df["subjectivity"].mean(),
+        "mediana": df["subjectivity"].median(),
+        "pct_subjectivity_cero": (df["subjectivity"]==0).mean() * 100
+    }
+
+def subjectivity_por_categoria(df, columna_categoria):
+    #Subjectivity promedio, mediana y conteo
+    return df.groupby(columna_categoria)["subjectivity"].agg(["mean", "median", "count"])
+
+def prueba_neutralidad_textblob(df):
+    #Prueba la suposición: TextBlob marca mucha neutralidad por no encontrar el vocabulario en su léxico, no por nautralidad real
+    neutrales_tb = df[df["categoria_textblob"]=="Neutral"]
+    pct_cero_en_neutrales = (neutrales_tb["subjectivity"]==0).mean() * 100
+
+    #Verificar si VADER detecta sentimiento diferente a TextBlob
+    desacuerdo = df[(df["categoria_textblob"]=="Neutral") & (df["categoria_vader"] != "Neutral")]
+    pct_cero_en_desacuerdo = (desacuerdo["subjectivity"]==0).mean() * 100
+
+    return {
+        "neutrales_textblob": len(neutrales_tb),
+        "pct_subjectivity_cero_en_neutrales": pct_cero_en_neutrales,
+        "casos_desacuerdo_vader_no_neutral": len(desacuerdo),
+        "pct_subjectivity_cero_en_desacuerdo": pct_cero_en_desacuerdo,
+    }
 
 
 if __name__ == "__main__":
@@ -136,4 +183,23 @@ if __name__ == "__main__":
 
    print("\nCorrelación sentimiento (día t-k) vs. variación de precio (día t):")
    print(correlacion_con_rezago().round(3).to_string(index=False))
+
+   print("\nAnálisis de subjectivity (TextBlob)")
+   df_subj = calcular_subjectivity(cargar_noticias_con_titular())
+
+   resumen = resumen_subjectivity(df_subj)
+   print(f"Promedio: {resumen['promedio']:.3f} | Mediana_ {resumen['mediana']:.3f} | "
+         f"% con subjectivity = 0: {resumen['pct_subjectivity_cero']:.1f}%")
+
+   print("\nSubjectivity por categoria de TextBlob:")
+   print(subjectivity_por_categoria(df_subj, "categoria_textblob").round(3))
+
+   print("\nSubjectivity por categoria de VADER:")
+   print(subjectivity_por_categoria(df_subj, "categoria_vader").round(3))
+
+   print("Prueba de Hipótesis de neutralidad de TextBlob:")
+   prueba = prueba_neutralidad_textblob(df_subj)
+   for clave, valor in prueba.items():
+       print(f" {clave}: {valor}")
+
 
