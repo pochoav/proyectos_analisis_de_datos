@@ -5,6 +5,8 @@ import os
 import sqlite3
 import pandas as pd
 from textblob import TextBlob
+from collections import Counter
+from nlp_analysis import limpiar_texto
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH=os.path.join(BASE_DIR, "data", "market_data.db")
@@ -13,7 +15,7 @@ def cargar_noticias_analizadas():
     conexion = sqlite3.connect(DB_PATH)
     df = pd.read_sql_query(
         """
-        SELECT ticker, categoria_vader, categoria_textblob,
+        SELECT ticker, fecha, titular, categoria_vader, categoria_textblob,
                sentimiento_vader, sentimiento_textblob
         FROM noticias
         WHERE categoria_vader IS NOT NULL AND categoria_textblob IS NOT NULL
@@ -21,6 +23,7 @@ def cargar_noticias_analizadas():
         conexion
     )
     conexion.close()
+    df["fecha"] = pd.to_datetime(df["fecha"], utc=True).dt.tz_localize(None)
     return df
 
 def porcentaje_coincidencia(df):    #Calcular coincidencia entre modelos
@@ -31,8 +34,43 @@ def matriz_confusion(df):   #Presentar matriz de confusión (visualizar coincide
     return pd.crosstab(df["categoria_vader"], df["categoria_textblob"],
                        rownames=["VADER"], colnames=["TextBlob"])
 
+def palabras_clave_frecuentes(df, columna_categoria, top_n=15):
+    """Top de palabras en titulares 'Negativa', según el modelo indicado en columna_categoria."""
+    titulares_negativos = df.loc[df[columna_categoria] == "Negativa", "titular"]
+
+    conteo = Counter()
+    for titular in titulares_negativos:
+        conteo.update(limpiar_texto(titular))
+
+    return pd.DataFrame(conteo.most_common(top_n), columns=["palabra", "frecuencia"])
+
 def correlacion_pearson(df):    #Calcula Índice de Correlación de Pearson para medir similitud
     return df["sentimiento_vader"].corr(df["sentimiento_textblob"])
+
+def tendencia_semanal_sentimiento(df, columna_score):
+    #Promedio de sentimiento por semana, y la semana más baja/más alta.
+    semanal = (
+        df.set_index("fecha")
+        .resample("W")
+        .agg(sentimiento_promedio=(columna_score, "mean"), n_noticias=(columna_score, "count"))
+        .reset_index()
+        .dropna()
+    )
+
+    fila_min = semanal.loc[semanal["sentimiento_promedio"].idxmin()]
+    fila_max = semanal.loc[semanal["sentimiento_promedio"].idxmax()]
+
+    resumen = {
+        "semana_mas_baja": fila_min["fecha"].date(),
+        "valor_mas_bajo": fila_min["sentimiento_promedio"],
+        "semana_mas_alta": fila_max["fecha"].date(),
+        "valor_mas_alto": fila_max["sentimiento_promedio"],
+        "rango": fila_max["sentimiento_promedio"] - fila_min["sentimiento_promedio"],
+        "n_min": fila_min["n_noticias"],
+        "n_max": fila_max["n_noticias"],
+
+    }
+    return semanal, resumen
 
 def cargar_precios_diarios():   #Calcula variación de precios día a día
     conexion = sqlite3.connect(DB_PATH)
@@ -169,7 +207,10 @@ def prueba_neutralidad_textblob(df):
 
 
 if __name__ == "__main__":
+
+   
    df = cargar_noticias_analizadas()
+
    print(f"\nNoticias comparadas : {len(df)}")
    print(f"% de coincidencia de categoría (VADER vs. TextBlob): {porcentaje_coincidencia(df):.1f}%")
 
@@ -201,5 +242,27 @@ if __name__ == "__main__":
    prueba = prueba_neutralidad_textblob(df_subj)
    for clave, valor in prueba.items():
        print(f" {clave}: {valor}")
+
+   print("\nPalabras clave en noticias negativas (VADER):")
+   print(palabras_clave_frecuentes(df, "categoria_vader").to_string(index=False))
+
+   print("\nPalabras clave en noticias negativas (TextBlob):")
+   print(palabras_clave_frecuentes(df, "categoria_textblob").to_string(index=False))
+
+   _, resumen_vader = tendencia_semanal_sentimiento(df, "sentimiento_vader")
+   print(f"\nTendencia semanal (VADER): semana más baja {resumen_vader['semana_mas_baja']} "
+         f"({resumen_vader['valor_mas_bajo']:+.3f}), más alta {resumen_vader['semana_mas_alta']} "
+         f"({resumen_vader['valor_mas_alto']:+.3f}), rango {resumen_vader['rango']:.3f}")
+
+   _, resumen_textblob = tendencia_semanal_sentimiento(df, "sentimiento_textblob")
+   print(f"\nTendencia semanal (TextBlob): semana más baja {resumen_textblob['semana_mas_baja']} "
+         f"({resumen_textblob['valor_mas_bajo']:+.3f}), más alta {resumen_textblob['semana_mas_alta']} "
+         f"({resumen_textblob['valor_mas_alto']:+.3f}), rango {resumen_textblob['rango']:.3f}")
+    
+
+
+    
+
+
 
 
