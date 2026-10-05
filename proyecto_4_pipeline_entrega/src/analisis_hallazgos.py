@@ -135,7 +135,7 @@ def construir_panel_diario():
 
 def correlacion_con_rezago(rezagos=(0, 1, 2)):
     #Correlación entre el precio del día y el sentimiento promedio anterior
-    panel = contruir_panel_diario()
+    panel = construir_panel_diario()
 
     for k in rezagos:
         panel[f"vader_{k}"] = panel.groupby("ticker")["sentimiento_vader"].shift(k)
