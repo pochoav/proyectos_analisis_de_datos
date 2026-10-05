@@ -167,7 +167,7 @@ if not df_precios.empty:
         x=df_precios["fecha"], y=df_precios["volumen"], name="Volumen", marker_color="royalblue"
     ), row=2, col=1)
     fig_velas.update_layout(
-        title="1. Precio histórico y volumen operado",
+        title="Precio histórico y volumen operado",
         xaxis_rangeslider_visible=False, template="plotly_white", height=450
     )
     st.plotly_chart(fig_velas, width="stretch")
@@ -184,7 +184,7 @@ with col_g1:
         colores = {"Positiva": "#2ecc71", "Neutral": "#95a5a6", "Negativa": "#e74c3c"}
         fig_barras = px.bar(
             conteo, x="Categoría", y="Cantidad", color="Categoría",
-            color_discrete_map=colores, title=f"2. Distribución de sentimiento ({modelo_nlp})"
+            color_discrete_map=colores, title=f"Distribución de sentimiento ({modelo_nlp})"
         )
         fig_barras.update_layout(template="plotly_white")
         st.plotly_chart(fig_barras, width="stretch")
@@ -208,7 +208,7 @@ with col_g2:
             x=df_comp["fecha"], y=df_comp[col_score], name=f"Sentimiento {modelo_nlp}",
             line=dict(color="orange", dash="dash"), connectgaps=True
         ), secondary_y=True)
-        fig_comp.update_layout(title="3. Precio de cierre vs. índice de sentimiento", template="plotly_white")
+        fig_comp.update_layout(title="Precio de cierre vs. índice de sentimiento", template="plotly_white")
         st.plotly_chart(fig_comp, width="stretch")
     else:
         st.info("No hay suficientes datos combinados para la comparativa.")
