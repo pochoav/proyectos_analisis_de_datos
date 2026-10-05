@@ -123,7 +123,7 @@ def correlacion_sentimiento_mercado():  #Compara días donde hay por lo menos pr
 
     return pd.DataFrame(resultados)
 
-def contruir_panel_diario():
+def construir_panel_diario():
     #Calendario de días hábiles para el análisis de correlación entre sentimiento y precio CON REZAGO TEMPORAL
     precios = cargar_precios_diarios()
     precios = precios.drop_duplicates(subset=["ticker", "fecha"]) #Protección de filas repetidas
