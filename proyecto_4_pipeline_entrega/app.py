@@ -27,10 +27,10 @@ DIAS_POR_DEFECTO = 30       # ventana inicial del selector de fechas
 RANGO_SENTIMIENTO = (-1, 1)  # escala fija: ningún movimiento pequeño parece grande
 
 
-# ---------------------------------------------------------------------------
+
 # Identidad visual
 # Frío = mercado (precios). Cálido = prensa (noticias y sentimiento).
-# ---------------------------------------------------------------------------
+
 PALETA = {
     "tinta": "#0F1C24",    # fondo
     "capa": "#172832",     # barra lateral y superficies elevadas
@@ -105,9 +105,9 @@ html, body, .stApp, .stMarkdown, [data-testid="stSidebar"], button, input, texta
 st.markdown(f"<style>{CSS_IMPORT}{CSS_VARIABLES}{CSS_BASE}</style>", unsafe_allow_html=True)
 
 
-# ---------------------------------------------------------------------------
+
 # Utilidades
-# ---------------------------------------------------------------------------
+
 def rgba(hex_color, alpha):
     h = hex_color.lstrip("#")
     r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
@@ -127,13 +127,12 @@ def aviso(mensaje):
 
 
 def mostrar(fig):
-    # theme=None: que Streamlit no pise los colores y la tipografía de nuestra plantilla
+    # theme=None: Streamlit no sobrepasa la plantilla con otros themes
     st.plotly_chart(fig, width="stretch", theme=None)
 
 
-# ---------------------------------------------------------------------------
+
 # Lectura de market_data.db (con caché; se invalida si el archivo .db cambia)
-# ---------------------------------------------------------------------------
 def _version_bd():
     return os.path.getmtime(DB_PATH) if os.path.exists(DB_PATH) else 0
 
@@ -205,9 +204,8 @@ def contar_palabras(titulares, top_n):
     return conteo.most_common(top_n)
 
 
-# ---------------------------------------------------------------------------
 # Gráficas (plantilla común + una función por gráfica)
-# ---------------------------------------------------------------------------
+
 def estilo_base(fig, alto, hovermode="x unified"):
     fig.update_layout(
         height=alto,
@@ -341,9 +339,9 @@ def grafica_palabras(df_noticias, col_cat, top_n=12):
     return fig
 
 
-# ---------------------------------------------------------------------------
-# Piezas HTML: franja de indicadores y lista de titulares
-# ---------------------------------------------------------------------------
+
+# Franja de indicadores y lista de titulares (con HTML)
+
 def kpi(etiqueta, valor, cuerpo):
     return (f'<div class="tk-kpi"><div class="tk-etiqueta">{etiqueta}</div>'
             f'<div class="tk-valor">{valor}</div>{cuerpo}</div>')
@@ -413,9 +411,9 @@ def lista_titulares(df, col_cat, col_score, hay_nlp, limite=40):
     return f'<div class="tk-feed">{"".join(filas)}</div>', len(recientes)
 
 
-# ---------------------------------------------------------------------------
+
 # Validación inicial
-# ---------------------------------------------------------------------------
+
 if not os.path.exists(DB_PATH):
     st.error("No se encontró data/market_data.db. Ejecuta primero: python src/fetch_data.py")
     st.stop()
@@ -426,9 +424,9 @@ if not tickers_disponibles:
     st.error("La base de datos todavía no tiene precios. Ejecuta primero: python src/fetch_data.py")
     st.stop()
 
-# ---------------------------------------------------------------------------
+
 # Barra lateral
-# ---------------------------------------------------------------------------
+
 st.sidebar.markdown('<div class="tk-lado">Filtros</div>', unsafe_allow_html=True)
 ticker = st.sidebar.selectbox("Activo", tickers_disponibles)
 modelo_nlp = st.sidebar.radio(
@@ -451,9 +449,9 @@ if isinstance(fechas, (tuple, list)) and len(fechas) == 2:
 else:  # el usuario todavía está eligiendo la segunda fecha
     fecha_inicio, fecha_fin = inicio_defecto, fecha_max_datos
 
-# ---------------------------------------------------------------------------
+
 # Datos del activo y rango elegidos
-# ---------------------------------------------------------------------------
+
 df_precios_bruto = cargar_precios(ticker, version_bd)
 df_noticias_bruto = cargar_noticias(ticker, version_bd)
 
@@ -468,9 +466,9 @@ nlp_completado = not df_noticias.empty and col_score in df_noticias.columns
 if not df_noticias.empty and not nlp_completado:
     aviso("Aún no se calculó el sentimiento. Ejecuta en la terminal: python src/nlp_analysis.py")
 
-# ---------------------------------------------------------------------------
+
 # Encabezado e indicadores
-# ---------------------------------------------------------------------------
+
 st.markdown(
     f'<div class="tk-ticker">{html.escape(ticker)}</div>'
     f'<div class="tk-sub">Precio y tono de las noticias del {fecha_inicio:%d/%m/%Y} al {fecha_fin:%d/%m/%Y}, '
@@ -485,9 +483,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ---------------------------------------------------------------------------
+
 # Secciones: cada una responde una pregunta
-# ---------------------------------------------------------------------------
+
 seccion("¿Cómo se movió el precio?",
         "Cada vela resume un día. Vacía: cerró al alza. Rellena: cerró a la baja. Abajo, el volumen operado.")
 if df_precios.empty:
