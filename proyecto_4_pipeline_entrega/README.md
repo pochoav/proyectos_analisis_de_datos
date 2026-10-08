@@ -9,9 +9,9 @@ https://pochoavproyecto4pipeline.streamlit.app/
 ## Dashboard en uso
 Dentro de la aplicación en Streamlit Community Cloud se puede cambiar el *ticker* entre las distintas empresas, el rango de fechas y el modelo de NLP (VADER o TextBlob)
 
-![imagen_demo_1](image.png)
-![imagen_demo_2](image-1.png)
-![imagen_demo_3](image-2.png)
+![imagen_demo_1](docs/image.png)
+![imagen_demo_2](docs/image-1.png)
+![imagen_demo_3](docs/image-2.png)
 
 
 ## Arquitectura de análisis
