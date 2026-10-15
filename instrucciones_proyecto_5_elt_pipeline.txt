@@ -1,0 +1,92 @@
+======================================================================
+PROYECTO 5: Data Pipeline Moderno en la Nube (ELT, dbt y Orchestration)
+            (Environmental & Smart City Analytics)
+======================================================================
+
+CONTEXTO:
+Una organización gubernamental de ciudades inteligentes necesita monitorear
+en tiempo real la calidad del aire y los patrones meteorológicos de 5 grandes
+metrópolis para tomar decisiones de salud pública.
+
+No puedes usar archivos CSV locales. Debes construir un pipeline de datos moderno
+basado en la arquitectura ELT (Extract, Load, Transform): extraer datos desde 
+una API, cargarlos en un Data Warehouse en la Nube, transformarlos dentro del 
+warehouse usando dbt, y orquestar la ejecución de forma local y manual
+(en escenarios productivos empresariales, esta orquestación se programa de
+manera automatizada 24/7 en la nube, lo cual queda fuera del alcance
+de este ejercicio de portafolio).
+
+----------------------------------------------------------------------
+OBJETIVOS / PREGUNTAS CLAVE DE NEGOCIO
+----------------------------------------------------------------------
+Tu arquitectura en la nube debe responder a lo siguiente:
+- ¿Cuáles son las horas pico del día con peor calidad del aire por ciudad?
+- ¿Existe correlación entre la temperatura/humedad y la concentración de contaminantes (PM2.5 / PM10)?
+- ¿Qué ciudades superaron los límites de la OMS en la última semana?
+
+----------------------------------------------------------------------
+ENTREGABLES REQUERIDOS
+----------------------------------------------------------------------
+Crea una carpeta para el proyecto con esta estructura exacta:
+
+proyecto_5_elt_pipeline_entrega/
+├── dbt_project/                 <-- Proyecto completo de dbt (models, tests, docs)
+│   ├── models/
+│   │   ├── staging/             <-- Capa de datos en bruto limpiada
+│   │   └── marts/               <-- Tablas finales agregadas para negocio
+│   └── dbt_project.yml
+├── orchestration/
+│   └── dags/
+│       └── airflow_pipeline.py  <-- DAG de Airflow
+├── scripts/
+│   └── extract_to_warehouse.py  <-- Script de Python para ingesta API -> Cloud
+├── dashboard/
+│   └── dashboard_link.txt       <-- Enlace a dashboard en la nube (Looker Studio)
+├── architecture_diagram.png     <-- Diagrama de la arquitectura del pipeline
+└── README.md                    <-- Documentación técnica completa
+
+----------------------------------------------------------------------
+CHECKLIST DE TRABAJO (PASO A PASO)
+----------------------------------------------------------------------
+
+[ ] PASO 1: Ingesta y Carga en la Nube (Python + Cloud Warehouse)
+    - Crear una cuenta gratuita en Google Cloud Platform (BigQuery).
+    - Escribir un script en Python (`scripts/extract_to_warehouse.py`) que consuma
+      la API de Open-Meteo para 5 ciudades.
+    - Cargar los datos crudos directamente en una tabla `raw` en BigQuery
+      sin transformaciones complejas (Enfoque ELT).
+
+[ ] PASO 2: Transformación de Datos con dbt (data build tool)
+    - Configurar un proyecto de `dbt Core` (o dbt Cloud) conectado a tu Data Warehouse.
+    - Crear modelos SQL de **Staging**: Limpiar tipos de datos, castear timestamps y filtrar nulos.
+    - Crear modelos SQL de **Marts**: Agrupar datos por ciudad, día y hora para calcular promedios.
+    - Escribir pruebas automáticas en dbt (`dbt test`) para asegurar que no existan
+      valores nulos en llaves primarias ni rangos imposibles de temperatura.
+
+[ ] PASO 3: Orquestación Local y Manual (Airflow Standalone)
+    - Crear un flujo de trabajo (DAG) usando Apache Airflow en `orchestration/dags/airflow_pipeline.py`.
+    - Configurar las tareas secuenciales en el DAG:
+      1. Tarea 1: Ejecutar script de extracción API -> Nube.
+      2. Tarea 2: Ejecutar comando `dbt run` para transformar.
+      3. Tarea 3: Ejecutar comando `dbt test` para validar calidad de datos.
+    - Acceder a la interfaz web local de Airflow y disparar la ejecución manual (on-demand)
+      del DAG cada vez que se requiera validar o simular el flujo.
+
+[ ] PASO 4: Dashboard BI y Documentación Técnica
+    - Conectar una herramienta de Business Intelligence (Looker Studio)
+      directamente al Data Warehouse (a la capa de Marts generada por dbt).
+    - Crear un dashboard interactivo con alertas de calidad del aire y métricas clave.
+    - Diseñar un diagrama visual (`architecture_diagram.png`) mostrando el flujo:
+      API -> Python -> BigQuery -> dbt -> Airflow -> Dashboard.
+    - Documentar todo en el `README.md` explicando cómo desplegar el proyecto.
+
+======================================================================
+RECURSOS Y HERRAMIENTAS OBLIGATORIAS:
+- GCP: https://cloud.google.com/free
+- Weather API: https://open-meteo.com
+- Lenguajes: Python 3.x, SQL avanzado.
+- Data Warehouse: Google BigQuery.
+- Transformación & Calidad: dbt Core (`dbt-bigquery`).
+- Orquestación: Apache Airflow (Standalone vía pip).
+- BI: Looker Studio (gratuito con GCP).
+======================================================================
