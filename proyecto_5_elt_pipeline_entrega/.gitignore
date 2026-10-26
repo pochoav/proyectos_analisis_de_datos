@@ -1,0 +1,19 @@
+# Secretos
+.env
+service-account*.json
+*-key.json
+gcp-key*.json
+profiles.yml.bak
+
+# Entornos virtuales
+.venv*/
+
+# dbt
+target/
+dbt_packages/
+logs/
+
+# Airflow y Python
+airflow.db
+__pycache__/
+*.pyc
