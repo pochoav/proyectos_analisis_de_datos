@@ -1,0 +1,7 @@
+version: 2
+
+sources:
+  - name: air_quality_raw
+    schema: air_quality_raw
+    tables:
+      - name: openmeteo_hourly
