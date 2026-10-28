@@ -1,0 +1,10 @@
+name: air_quality_dbt
+version: "1.0.0"
+profile: air_quality_dbt
+
+models:
+  air_quality_dbt:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

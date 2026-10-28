@@ -17,3 +17,6 @@ logs/
 airflow.db
 __pycache__/
 *.pyc
+target/
+logs/
+dbt_packages/
