@@ -1,3 +1,5 @@
+#Obtener valores diversos cada hora
+
 select
     city,
     city_timezone,
