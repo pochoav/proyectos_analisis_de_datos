@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_openmeteo_hourly
+    description: "Lecturas horarias limpias de clima y calidad del aire por ciudad."
+    columns:
+      - name: reading_id
+        description: "Llave primaria: ciudad + hora UTC."
+        data_tests:
+          - not_null
+          - unique
+      - name: city
+        data_tests:
+          - not_null
+      - name: measured_at_utc
+        data_tests:
+          - not_null

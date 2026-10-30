@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: mart_air_quality_hourly
+    description: "Promedios por ciudad, fecha local y hora local."
+    columns:
+      - name: city
+        data_tests:
+          - not_null
+      - name: measured_date_local
+        data_tests:
+          - not_null
+      - name: measured_hour_local
+        data_tests:
+          - not_null
+
+  - name: mart_peak_hours
+    description: "Promedio de contaminación por ciudad y hora del día, con ranking de horas pico."
+    columns:
+      - name: city
+        data_tests:
+          - not_null
+      - name: hour_of_day_local
+        data_tests:
+          - not_null
+
+  - name: mart_weather_correlation
+    description: "Correlación entre clima y contaminación por ciudad."
+    columns:
+      - name: city
+        data_tests:
+          - not_null
+          - unique
+
+  - name: mart_who_exceedances
+    description: "Promedios diarios por ciudad comparados con los límites de la OMS."
+    columns:
+      - name: city
+        data_tests:
+          - not_null
+      - name: measured_date_local
+        data_tests:
+          - not_null
