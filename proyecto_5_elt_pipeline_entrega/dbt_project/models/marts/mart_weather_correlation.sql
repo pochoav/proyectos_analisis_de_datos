@@ -1,4 +1,4 @@
-#Verificar correlación entre temperatura o humedad y la contaminación
+--Verificar correlación entre temperatura o humedad y la contaminación
 
 select
     city,

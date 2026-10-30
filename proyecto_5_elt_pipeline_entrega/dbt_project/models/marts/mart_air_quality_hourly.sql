@@ -1,4 +1,4 @@
-#Obtener valores diversos cada hora
+--Obtener valores diversos cada hora
 
 select
     city,
