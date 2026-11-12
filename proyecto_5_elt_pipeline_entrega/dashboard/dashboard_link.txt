@@ -1,0 +1,5 @@
+Dashboard: Calidad de aire - Proyecto 5 (Data Studio)
+URL: https://datastudio.google.com/reporting/fbab7b1b-e32b-4397-878c-b3f255bbb960
+Fuente de datos: BigQuery (proyecto air-quality-elt, dataser air_quality_dbt)
+Última actualización de datos:
+11 noviembre 2026
