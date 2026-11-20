@@ -17,7 +17,7 @@ Pipeline de datos moderno con arquitectura **ELT** que monitorea la calidad del 
 | ¿Existe correlación entre temperatura o humedad y la concentración de PM2.5 y PM10? | `mart_weather_correlation` | Página 3 del dashboard|
 | ¿Qué ciudades superaron los límites de la OMS en la última semana? | `mart_who_exceedances` | Página 1 del dashboard|
 
-Un cuarto model, `mart_air_quality_hourly`, deja los promedios por ciudad, fecha local y hora local como tabla base para análisis posterior.
+Un cuarto modelo, `mart_air_quality_hourly`, deja los promedios por ciudad, fecha local y hora local como tabla base para análisis posterior.
 
 ## Arquitectura
 
