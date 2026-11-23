@@ -23,7 +23,7 @@ Un cuarto modelo, `mart_air_quality_hourly`, deja los promedios por ciudad, fech
 
 ![Arquitectura del pipeline](architecture_diagram.png)
 
-El flujo sigue el patrón **ElT**: los datos se cargan en bruto y se transforman dentro del warehouse.
+El flujo sigue el patrón **ELT**: los datos se cargan en bruto y se transforman dentro del warehouse.
 
 1. **Extracción (Python).** `scripts/extract_to_warehouse.py` consulta dos endpoints de Open-Meteo por ciudad: el de clima (temperatura y humedad) y el de calidad del aire (PM2.5 y PM10). Une ambos por hora y obtiene 192 filas por ciudad (7 días anteriores y el día en curso, en UTC).
 2. **Carga (BigQuery, capa cruda).** La tabla `air_quality_raw.openmeteo_hourly` guarda los datos tal como llegan, sin transformaciones. Cada ejecución reemplaza la tabla (`WRITE_TRUNCATE`).
